@@ -6,7 +6,7 @@ version: "0.1.0"
   
 
 website:
-  title: "uvsyntax"
+  title: "udsyntax"
   page-footer:
     center: "Documentation for release version **{{< meta version >}}**"
 
@@ -19,7 +19,7 @@ website:
             
     right:   
       - icon: github
-        href: https://github.com/neelsmith/uvsyntax
+        href: https://github.com/neelsmith/udsyntax
         aria-label: GitHub
 
   

@@ -30,3 +30,26 @@ def latin_doc() -> Doc:
         "",
     ]
     return Doc(vocab, words=words, heads=heads, deps=deps, pos=pos, lemmas=lemmas, morphs=morphs)
+
+
+@pytest.fixture
+def subordinate_clause_doc() -> Doc:
+    """"Cum venit Caesar vicit." (contrived, not real Latin) as a
+    pre-parsed Doc: two finite verbs, "venit" (a subordinate clause,
+    introduced by "Cum") governed by "vicit" (the root clause's verb) via
+    an adverbial-clause relation -- enough to exercise `to_dot()`'s
+    clause-coloring across more than one clause."""
+    vocab = Vocab()
+    words = ["Cum", "venit", "Caesar", "vicit", "."]
+    heads = [1, 3, 3, 3, 3]
+    deps = ["mark", "advcl", "nsubj", "ROOT", "punct"]
+    pos = ["SCONJ", "VERB", "PROPN", "VERB", "PUNCT"]
+    lemmas = ["cum", "venio", "Caesar", "vinco", "."]
+    morphs = [
+        "",
+        "VerbForm=Fin",
+        "Case=Nom|Gender=Masc|Number=Sing",
+        "VerbForm=Fin",
+        "",
+    ]
+    return Doc(vocab, words=words, heads=heads, deps=deps, pos=pos, lemmas=lemmas, morphs=morphs)

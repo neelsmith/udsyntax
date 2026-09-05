@@ -1,0 +1,58 @@
+[
+  {
+    "objectID": "moredocs.html",
+    "href": "moredocs.html",
+    "title": "Quarry for docs",
+    "section": "",
+    "text": "Building a corpus-wide DataFrame\nfrom udsyntax import load_latin, SyntaxGraph, corpus_to_polars\n\nnlp = load_latin()\ngraphs = [SyntaxGraph.from_doc(nlp(text), urn=urn) for urn, text in lines]\ncorpus_df = corpus_to_polars(graphs)\nWhen a graph’s urn is a parseable CTS URN (urn:cts:namespace:group.work.version:passage), corpus_to_polars adds group / work / version / passage columns automatically."
+  },
+  {
+    "objectID": "quick.html",
+    "href": "quick.html",
+    "title": "Quick start",
+    "section": "",
+    "text": "After doing a normal spaCy analysis with nlp, you can create a SyntaxGraph from the result:\nfrom udsyntax import load_latin, SyntaxGraph\n\nnlp = load_latin()  # loads la_core_web_lg, cached after the first call\ndoc = nlp(\"Gallia est omnis divisa in partes tres.\")\n\ngraph = SyntaxGraph.from_doc(doc)\ndf = graph.to_polars()   # one row per token\ng = graph.to_networkx()  # requires the `graph` extra"
+  },
+  {
+    "objectID": "cexload.html",
+    "href": "cexload.html",
+    "title": "Loading a CEX corpus",
+    "section": "",
+    "text": "CEX files are urn|text lines, one per citable passage. read_cex can filter by a substring of the URN to preselect particular works.\nfrom udsyntax import read_cex\n\nlines = read_cex(\"genesis.cex\", urn_filter=\"vulgate\")\nurns = [urn for urn, _ in lines]\ntexts = [text for _, text in lines]"
+  },
+  {
+    "objectID": "viz.html",
+    "href": "viz.html",
+    "title": "Visualizing a graph",
+    "section": "",
+    "text": "udsyntax includes Python functions and utility scripts to create diagrams of SyntaxGraphs.\n\n\n\nudsyntax and the spaCy pipeline for whichever --lang you pass, already installed\nlocal install of graphviz to render a png file\n\nInstall dot:\nMac OS:\nbrew install graphviz\nWindows: download from https://graphviz.org/download/ or\nwinget install --id Graphviz.Graphviz\nVerify it worked: print a version string.\ndot -V\n\n\n\ntext_to_dot.py: analyze and graph a string\npython scripts/text_to_dot.py \"Gallia est omnis divisa in partes tres.\" --lang la | dot -Tpng -o bg_1_1.png\ncorpus_to_dot.py: identify a passage by URN, analyze it, generate its dot representation\npython3 scripts/corpus_to_dot.py scratch/data/compnov.cex --urn \"urn:cts:compnov:bible.genesis.vulgate:1.1\" --lang la | dot -Tpng -o genesis_1_1.png\nParameters:\n\ncorpus (positional, one or more): CEX files (urn|text lines) to search, read and concatenated in the order given via udsyntax.read_cex_many.\n--urn (required): the exact URN of the passage to select (via the new udsyntax.select_urn, an exact match, not the substring urn_filter that read_cex/read_cex_many accept). If more than one line across the given files shares this URN, a warning goes to stderr and the first one is used. If none matches, the script exits with an error naming the URN and the files searched.\n--lang / -l (required): la for Latin (la_core_web_lg) or grc for Ancient Greek (grc_dep_web_lg)."
+  },
+  {
+    "objectID": "viz.html#utility-scripts",
+    "href": "viz.html#utility-scripts",
+    "title": "Visualizing a graph",
+    "section": "",
+    "text": "udsyntax includes Python functions and utility scripts to create diagrams of SyntaxGraphs.\n\n\n\nudsyntax and the spaCy pipeline for whichever --lang you pass, already installed\nlocal install of graphviz to render a png file\n\nInstall dot:\nMac OS:\nbrew install graphviz\nWindows: download from https://graphviz.org/download/ or\nwinget install --id Graphviz.Graphviz\nVerify it worked: print a version string.\ndot -V\n\n\n\ntext_to_dot.py: analyze and graph a string\npython scripts/text_to_dot.py \"Gallia est omnis divisa in partes tres.\" --lang la | dot -Tpng -o bg_1_1.png\ncorpus_to_dot.py: identify a passage by URN, analyze it, generate its dot representation\npython3 scripts/corpus_to_dot.py scratch/data/compnov.cex --urn \"urn:cts:compnov:bible.genesis.vulgate:1.1\" --lang la | dot -Tpng -o genesis_1_1.png\nParameters:\n\ncorpus (positional, one or more): CEX files (urn|text lines) to search, read and concatenated in the order given via udsyntax.read_cex_many.\n--urn (required): the exact URN of the passage to select (via the new udsyntax.select_urn, an exact match, not the substring urn_filter that read_cex/read_cex_many accept). If more than one line across the given files shares this URN, a warning goes to stderr and the first one is used. If none matches, the script exits with an error naming the URN and the files searched.\n--lang / -l (required): la for Latin (la_core_web_lg) or grc for Ancient Greek (grc_dep_web_lg)."
+  },
+  {
+    "objectID": "viz.html#composing-diagrams-from-python",
+    "href": "viz.html#composing-diagrams-from-python",
+    "title": "Visualizing a graph",
+    "section": "Composing diagrams from Python",
+    "text": "Composing diagrams from Python\nudsyntax includes two functions, to_mermaid() and to_dot(), that diagram a SyntaxGraph using the syntax of Mermaid or the open-source graphviz package.\ngraph = SyntaxGraph.from_doc(doc)\n\nprint(graph.to_mermaid())                  # \"graph BT\" ... (root-at-top tree)\nprint(graph.to_mermaid(orientation=\"LR\"))  # left-to-right instead\n\nprint(graph.to_dot())                      # a Graphviz \"digraph { ... }\"\nprint(graph.to_dot(orientation=\"LR\"))      # left-to-right instead"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "The udsyntax package",
+    "section": "",
+    "text": "https://universaldependencies.org\n\nInstallation\nQuick start\nVisualizing a graph\nLoading a CEX corpus\nAPI docs"
+  },
+  {
+    "objectID": "installation.html",
+    "href": "installation.html",
+    "title": "Installing uvsytax",
+    "section": "",
+    "text": "Install the package from its GitHub repository:\npip install git+https://github.com/neelsmith/udsyntax.git\nYou’ll also need a spaCy pipeline for whichever language you’re parsing:\npip install \"la-core-web-lg @ https://huggingface.co/latincy/la_core_web_lg/resolve/main/la_core_web_lg-3.9.6-py3-none-any.whl\"\npip install \"grc-dep-web-lg @ https://huggingface.co/latincy/grc_dep_web_lg/resolve/main/grc_dep_web_lg-3.8.1-py3-none-any.whl\"\nIf you want to export graphs to networkx, install the graph extra:\npip install \"udsyntax[graph] @ git+https://github.com/neelsmith/udsyntax.git\""
+  }
+]
