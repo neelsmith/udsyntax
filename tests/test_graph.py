@@ -1,3 +1,7 @@
+import pytest
+from spacy.tokens import Doc
+from spacy.vocab import Vocab
+
 from udsyntax import SyntaxGraph, corpus_to_polars
 
 
@@ -73,3 +77,68 @@ def test_corpus_to_polars_adds_doc_index_and_urn_metadata(latin_doc):
 def test_corpus_to_polars_empty_list_returns_empty_frame():
     df = corpus_to_polars([])
     assert df.is_empty()
+
+
+def test_to_mermaid_default_orientation_is_bt(latin_doc):
+    graph = SyntaxGraph.from_doc(latin_doc)
+    mermaid = graph.to_mermaid()
+
+    lines = mermaid.splitlines()
+    assert lines[0] == "graph BT"
+    assert 'n3["divisa (3:VERB)"]' in mermaid
+    assert "n3 -->|nsubj| n0" in mermaid
+    assert "n3 -->|cop| n1" in mermaid
+
+
+def test_to_mermaid_accepts_orientation(latin_doc):
+    graph = SyntaxGraph.from_doc(latin_doc)
+    mermaid = graph.to_mermaid(orientation="LR")
+    assert mermaid.splitlines()[0] == "graph LR"
+
+
+def test_to_mermaid_rejects_invalid_orientation(latin_doc):
+    graph = SyntaxGraph.from_doc(latin_doc)
+    with pytest.raises(ValueError):
+        graph.to_mermaid(orientation="sideways")
+
+
+def test_to_mermaid_escapes_special_characters():
+    vocab = Vocab()
+    doc = Doc(vocab, words=['"Hi|there"'], heads=[0], deps=["ROOT"], pos=["INTJ"])
+    graph = SyntaxGraph.from_doc(doc)
+
+    mermaid = graph.to_mermaid()
+    assert "&quot;Hi&#124;there&quot;" in mermaid
+
+
+def test_to_dot_basic_structure(latin_doc):
+    graph = SyntaxGraph.from_doc(latin_doc)
+    dot = graph.to_dot()
+
+    assert dot.startswith('digraph "SyntaxGraph" {')
+    assert dot.rstrip().endswith("}")
+    assert 'n3 [label="divisa (3:VERB)"];' in dot
+    assert 'n3 -> n0 [label="nsubj"];' in dot
+
+
+def test_to_dot_uses_urn_as_graph_name(latin_doc):
+    urn = "urn:cts:phi:phi0448.phi001.perseus-lat2:1.1.1"
+    graph = SyntaxGraph.from_doc(latin_doc, urn=urn)
+    dot = graph.to_dot()
+    assert dot.startswith(f'digraph "{urn}" {{')
+
+
+def test_to_dot_escapes_quotes_and_backslashes():
+    vocab = Vocab()
+    doc = Doc(
+        vocab,
+        words=["back\\slash", 'quo"te'],
+        heads=[0, 0],
+        deps=["ROOT", "dep"],
+        pos=["X", "X"],
+    )
+    graph = SyntaxGraph.from_doc(doc)
+    dot = graph.to_dot()
+
+    assert "back\\\\slash" in dot
+    assert 'quo\\"te' in dot

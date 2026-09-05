@@ -1,0 +1,36 @@
+project:
+  type: website
+  output-dir: quarto-build
+
+version: "0.1.0"  
+  
+
+website:
+  title: "uvsyntax"
+  page-footer:
+    center: "Documentation for release version **{{< meta version >}}**"
+
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+
+        
+            
+    right:   
+      - icon: github
+        href: https://github.com/neelsmith/uvsyntax
+        aria-label: GitHub
+
+  
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+
+
+

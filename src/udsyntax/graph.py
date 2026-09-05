@@ -7,6 +7,23 @@ from typing import Iterable
 from .models import SyntaxEdge, SyntaxNode, VerbalUnit
 from .urn import parse_cts_urn
 
+#: Direction keywords Mermaid accepts for a flowchart's ``graph``/``flowchart`` header.
+MERMAID_ORIENTATIONS = frozenset({"TB", "TD", "BT", "RL", "LR"})
+
+
+def _mermaid_escape(text: str) -> str:
+    """Escape text for use inside a quoted Mermaid node or edge label."""
+    return (
+        text.replace("&", "&amp;")
+        .replace('"', "&quot;")
+        .replace("|", "&#124;")
+    )
+
+
+def _dot_escape(text: str) -> str:
+    """Escape text for use inside a quoted Graphviz DOT string."""
+    return text.replace("\\", "\\\\").replace('"', '\\"')
+
 
 @dataclass
 class SyntaxGraph:
@@ -102,6 +119,64 @@ class SyntaxGraph:
         for e in self.edges:
             g.add_edge(e.src, e.target, relation=e.relation)
         return g
+
+    def to_mermaid(self, orientation: str = "BT") -> str:
+        """Render this graph as a Mermaid flowchart definition.
+
+        Each node is rendered as ``n<id>["text (id:pos)"]`` and each
+        dependency edge as ``n<head> -->|relation| n<dependent>``, so the
+        arrow direction always runs from a token to its dependent,
+        regardless of ``orientation``.
+
+        Parameters
+        ----------
+        orientation:
+            The direction keyword written after ``graph`` in the header
+            line -- one of ``"TB"``, ``"TD"``, ``"BT"``, ``"RL"``, or
+            ``"LR"`` (see the Mermaid flowchart docs). Defaults to
+            ``"BT"`` (bottom-to-top), which reads like a traditional
+            syntax tree with the root at the top.
+
+        No external dependency is required -- this returns plain text
+        that can be pasted into any Mermaid-aware renderer (GitHub,
+        Claude/Cowork artifacts, the Mermaid Live Editor, etc.).
+        """
+        if orientation not in MERMAID_ORIENTATIONS:
+            raise ValueError(
+                f"orientation must be one of {sorted(MERMAID_ORIENTATIONS)}, got {orientation!r}"
+            )
+
+        lines = [f"graph {orientation}"]
+        for n in self.nodes:
+            label = _mermaid_escape(f"{n.text} ({n.id}:{n.pos})")
+            lines.append(f'    n{n.id}["{label}"]')
+        for e in self.edges:
+            label = _mermaid_escape(e.relation)
+            lines.append(f"    n{e.src} -->|{label}| n{e.target}")
+        return "\n".join(lines)
+
+    def to_dot(self) -> str:
+        """Render this graph as a Graphviz DOT ``digraph`` definition.
+
+        Each node is rendered as ``n<id> [label="text (id:pos)"];`` and
+        each dependency edge as ``n<head> -> n<dependent>
+        [label="relation"];``. The digraph is named after ``self.urn``
+        when present, otherwise ``"SyntaxGraph"``.
+
+        No external dependency is required -- this returns plain DOT
+        source text; feed it to the ``dot`` command line tool or the
+        ``graphviz`` Python package to render an image.
+        """
+        graph_name = _dot_escape(self.urn if self.urn else "SyntaxGraph")
+        lines = [f'digraph "{graph_name}" {{']
+        for n in self.nodes:
+            label = _dot_escape(f"{n.text} ({n.id}:{n.pos})")
+            lines.append(f'    n{n.id} [label="{label}"];')
+        for e in self.edges:
+            label = _dot_escape(e.relation)
+            lines.append(f"    n{e.src} -> n{e.target} [label=\"{label}\"];")
+        lines.append("}")
+        return "\n".join(lines)
 
 
 def corpus_to_polars(graphs: Iterable[SyntaxGraph]):
