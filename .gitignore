@@ -1,0 +1,11 @@
+.env
+scratch/
+.venv/
+__pycache__/
+__marimo__/
+.DS_Store
+quarto/quarto-build/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
