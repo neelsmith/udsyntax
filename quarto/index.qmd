@@ -6,4 +6,5 @@ title: The `uvsyntax` package
 - [Installation](./installation.qmd)
 - [Quick start](./quick.qmd)
 - [Visualizing a graph](./viz.qmd)
+- [Loading a CEX corpus](./cexload.qmd)
 - [API docs](https://neelsmith.github.io/udsyntax/udsyntax.html)
