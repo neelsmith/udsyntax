@@ -17,6 +17,7 @@ dependencies = [
 [project.optional-dependencies]
 graph = ["networkx>=3.0"]
 dev = ["pytest>=7.0"]
+docs = ["pdoc>=14.0"]
 
 [project.urls]
 Homepage = "https://github.com/neelsmith/udsyntax"
