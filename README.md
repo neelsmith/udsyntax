@@ -2,11 +2,13 @@
 
 Extract simple syntax graphs from spaCy's Universal Dependencies parses of Greek and Latin texts.
 
-`udsyntax` packages up three things that used to live together in a scratch notebook (`scratch/ud2syntax.py`):
+> See [release notes](https://github.com/neelsmith/udsyntax/blob/main/releases.md)
 
-1. loading citable Greek/Latin text corpora from CEX files,
-2. running them through spaCy dependency-parsing pipelines (developed against the LatinCy `la_core_web_lg` and `grc_dep_web_lg` models), and
-3. flattening the resulting parse into a small, framework-independent `SyntaxNode` / `SyntaxEdge` graph model that can be exported to a polars `DataFrame` or a networkx graph.
+
+
+1. load citable Greek/Latin text corpora from CEX files
+2. analyze them with spaCy pipelines (developed against the LatinCy `la_core_web_lg` and `grc_dep_web_lg` models)
+3. flatten the resulting parse into a small, framework-independent `SyntaxNode` / `SyntaxEdge` graph model that can be exported to a polars `DataFrame` or a `networkx` graph.
 
 ## Installation
 
