@@ -1,6 +1,6 @@
 # Release notes
 
-Current version: **0.1.0**
+Current version: **0.2.0**
 
 
 **0.2.0**, *Sept. 5, 2026*: Additions:
