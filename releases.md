@@ -3,7 +3,7 @@
 Current version: **0.1.0**
 
 
-**0.2.0**, *??*: Additions:
+**0.2.0**, *Sept. 5, 2026*: Additions:
 
 - utility script for building dot graphs from cited references in a corpus
 - improved visual formatting of `dot` graphs including coloring by clause

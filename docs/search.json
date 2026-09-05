@@ -53,7 +53,21 @@
     "href": "index.html",
     "title": "The udsyntax package",
     "section": "",
-    "text": "https://universaldependencies.org\n\nInstallation\nQuick start\nVisualizing a graph\nLoading a CEX corpus\nAPI docs"
+    "text": "Patrick Burns has created invaluable resources for nature-language processing of Latin and Greek texts with the Python spaCy package. The spaCy analyses include syntactic relations (dependencies) that are annotated following the guidelines of the Universal Dependencies framework.\nudsyntax extracts syntactic analysis of a Latin or Greek passage into a simple SyntaxNode / SyntaxEdge graph model that can be used with generic Python tools including polars data frames, NetworkX graphs, and visualization tools like graphviz."
+  },
+  {
+    "objectID": "index.html#about-udsyntax",
+    "href": "index.html#about-udsyntax",
+    "title": "The udsyntax package",
+    "section": "",
+    "text": "Patrick Burns has created invaluable resources for nature-language processing of Latin and Greek texts with the Python spaCy package. The spaCy analyses include syntactic relations (dependencies) that are annotated following the guidelines of the Universal Dependencies framework.\nudsyntax extracts syntactic analysis of a Latin or Greek passage into a simple SyntaxNode / SyntaxEdge graph model that can be used with generic Python tools including polars data frames, NetworkX graphs, and visualization tools like graphviz."
+  },
+  {
+    "objectID": "index.html#using-udsyntax",
+    "href": "index.html#using-udsyntax",
+    "title": "The udsyntax package",
+    "section": "Using udsyntax",
+    "text": "Using udsyntax\n\nInstallation\nQuick start\nVisualizing a graph\nLoading a CEX corpus\nAPI docs"
   },
   {
     "objectID": "installation.html",

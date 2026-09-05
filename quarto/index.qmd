@@ -3,10 +3,15 @@ title: The `udsyntax` package
 ---
 
 
+## About `udsyntax`
 
-https://universaldependencies.org
+[Patrick Burns](https://diyclassics.github.io) has created invaluable resources for nature-language  processing of Latin and Greek texts with the Python `spaCy` package. The `spaCy` analyses include syntactic relations (dependencies) that are annotated following the guidelines of the [Universal Dependencies](https://universaldependencies.org) framework.
+
+`udsyntax` extracts syntactic analysis of a Latin or Greek passage into a simple `SyntaxNode` / `SyntaxEdge` graph model that can be used with generic Python tools including `polars` data frames, `NetworkX` graphs, and visualization tools like `graphviz`.
 
 
+
+## Using `udsyntax`
 
 - [Installation](./installation.qmd)
 - [Quick start](./quick.qmd)
