@@ -9,7 +9,7 @@ Typical usage::
     graph = SyntaxGraph.from_doc(doc)
     df = graph.to_polars()
 """
-from .corpora import read_cex, read_cex_many
+from .corpora import read_cex, read_cex_many, select_urn
 from .graph import SyntaxGraph, corpus_to_polars
 from .models import SyntaxEdge, SyntaxNode, VerbalUnit
 from .nlp import (
@@ -29,6 +29,7 @@ __all__ = [
     "corpus_to_polars",
     "read_cex",
     "read_cex_many",
+    "select_urn",
     "load_latin",
     "load_greek",
     "load_pipeline",
