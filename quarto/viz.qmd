@@ -2,68 +2,80 @@
 title: Visualizing a graph
 ---
 
+`udsyntax` includes Python functions and utility scripts to create diagrams of `SyntaxGraph`s in the `dot` syntax used by the freely available `graphviz` software, and in Mermaid syntax.  Mermaid diagrams can be rendered in many Markdown viewers, on mermaid.live, etc. `dot` graphs require you to install `graphviz` to generate a PNG or SVG image. 
+
+
+## Prerequisites
+
+-  [install `udsyntax`](./installation.qmd) and the spaCy pipeline for whichever you want to use
+
+To use `dot` files, install `graphviz`:
+
+on Mac OS:
+
+`brew install graphviz`
+
+on Windows: download from https://graphviz.org/download/ or
+
+`winget install --id Graphviz.Graphviz`
+
+To verify it worked: print a version string.
+
+`dot -V`
+
+
+
 
 
 ## Utility scripts
 
-`udsyntax` includes Python functions and utility scripts to create diagrams of `SyntaxGraph`s.
 
-### Requirements
+### `text_to_dot.py`
 
-- `udsyntax` and the spaCy pipeline for whichever `--lang` you pass, already installed
-- local install of `graphviz` to render a png file
+`text_to_dot.py`: analyzes a string of text and composes a string with the `dot` format of the graph. The `--lang` (or `-l`) paramater is required.
 
-Install `dot`:
+```bash
+python scripts/text_to_dot.py "Gallia est omnis divisa in partes tres." --lang la 
+```
 
-Mac OS:
-
-    brew install graphviz
-
-Windows: download from https://graphviz.org/download/ or
-
-    winget install --id Graphviz.Graphviz
-
-Verify it worked: print a version string.
-
-    dot -V
-
-
-### Scripts
-
-`text_to_dot.py`: analyze and graph a string
+If you have installed `graphviz`, then you can pipe the result into `dot`. `-T` sets the output type, `-o` names the output file.
 
 ```bash
 python scripts/text_to_dot.py "Gallia est omnis divisa in partes tres." --lang la | dot -Tpng -o bg_1_1.png
 ```
 
+### `corpus_to_dot.py`
 
-`corpus_to_dot.py`: identify a passage by URN, analyze it, generate its dot representation
+`corpus_to_dot.py`: takes a text file with a corpus in CEX format and a URN, analyzes the text of the cited passage, and generates its dot representation, just like `text_to_dot.py`. The `--urn` and `--lang` (`-l`) parameters are required .
 
+
+```bash
+python3 scripts/corpus_to_dot.py scratch/data/compnov.cex --urn "urn:cts:compnov:bible.genesis.vulgate:1.1" --lang la 
+```
+
+Pipe it to `dot`:
 
 ```bash
 python3 scripts/corpus_to_dot.py scratch/data/compnov.cex --urn "urn:cts:compnov:bible.genesis.vulgate:1.1" --lang la | dot -Tpng -o genesis_1_1.png
 ```
 
-Parameters:
 
-- `corpus` (positional, one or more): CEX files (`urn|text` lines) to search, read and concatenated in the order given via `udsyntax.read_cex_many`.
-- `--urn` (required): the exact URN of the passage to select (via the new `udsyntax.select_urn`, an exact match, not the substring `urn_filter` that `read_cex`/`read_cex_many` accept). If more than one line across the given files shares this URN, a warning goes to stderr and the first one is used. If none matches, the script exits with an error naming the URN and the files searched.
-- `--lang` / `-l` (required): `la` for Latin (`la_core_web_lg`) or `grc` for Ancient Greek (`grc_dep_web_lg`).
 
 
 
 ## Composing diagrams from Python
 
-`udsyntax` includes two functions, `to_mermaid()` and `to_dot()`, that diagram a `SyntaxGraph` using the syntax of Mermaid or the open-source `graphviz` package.
+`udsyntax` includes two functions, `to_mermaid()` and `to_dot()`, that create the Mermaid graph or `dot` graph of a `SyntaxGraph` object.
 
 
 ```python
 graph = SyntaxGraph.from_doc(doc)
 
-print(graph.to_mermaid())                  # "graph BT" ... (root-at-top tree)
-print(graph.to_mermaid(orientation="LR"))  # left-to-right instead
+mmdgraph = graph.to_mermaid()          #  default BT orientation
+mmdgraph.to_mermaid(orientation="LR")  # left-to-right instead
 
-print(graph.to_dot())                      # a Graphviz "digraph { ... }"
-print(graph.to_dot(orientation="LR"))      # left-to-right instead 
+gviz = graph.to_dot()                   # a Graphviz digraph
+gviz = graph.to_dot(orientation="LR")   # left-to-right instead 
 ```
 
+You could save these results to a file, or in an interactive environment

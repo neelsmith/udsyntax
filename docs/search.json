@@ -25,21 +25,28 @@
     "href": "viz.html",
     "title": "Visualizing a graph",
     "section": "",
-    "text": "udsyntax includes Python functions and utility scripts to create diagrams of SyntaxGraphs.\n\n\n\nudsyntax and the spaCy pipeline for whichever --lang you pass, already installed\nlocal install of graphviz to render a png file\n\nInstall dot:\nMac OS:\nbrew install graphviz\nWindows: download from https://graphviz.org/download/ or\nwinget install --id Graphviz.Graphviz\nVerify it worked: print a version string.\ndot -V\n\n\n\ntext_to_dot.py: analyze and graph a string\npython scripts/text_to_dot.py \"Gallia est omnis divisa in partes tres.\" --lang la | dot -Tpng -o bg_1_1.png\ncorpus_to_dot.py: identify a passage by URN, analyze it, generate its dot representation\npython3 scripts/corpus_to_dot.py scratch/data/compnov.cex --urn \"urn:cts:compnov:bible.genesis.vulgate:1.1\" --lang la | dot -Tpng -o genesis_1_1.png\nParameters:\n\ncorpus (positional, one or more): CEX files (urn|text lines) to search, read and concatenated in the order given via udsyntax.read_cex_many.\n--urn (required): the exact URN of the passage to select (via the new udsyntax.select_urn, an exact match, not the substring urn_filter that read_cex/read_cex_many accept). If more than one line across the given files shares this URN, a warning goes to stderr and the first one is used. If none matches, the script exits with an error naming the URN and the files searched.\n--lang / -l (required): la for Latin (la_core_web_lg) or grc for Ancient Greek (grc_dep_web_lg)."
+    "text": "udsyntax includes Python functions and utility scripts to create diagrams of SyntaxGraphs in the dot syntax used by the freely available graphviz software, and in Mermaid syntax. Mermaid diagrams can be rendered in many Markdown viewers, on mermaid.live, etc. dot graphs require you to install graphviz to generate a PNG or SVG image."
+  },
+  {
+    "objectID": "viz.html#prerequisites",
+    "href": "viz.html#prerequisites",
+    "title": "Visualizing a graph",
+    "section": "Prerequisites",
+    "text": "Prerequisites\n\ninstall udsyntax and the spaCy pipeline for whichever you want to use\n\nTo use dot files, install graphviz:\non Mac OS:\nbrew install graphviz\non Windows: download from https://graphviz.org/download/ or\nwinget install --id Graphviz.Graphviz\nTo verify it worked: print a version string.\ndot -V"
   },
   {
     "objectID": "viz.html#utility-scripts",
     "href": "viz.html#utility-scripts",
     "title": "Visualizing a graph",
-    "section": "",
-    "text": "udsyntax includes Python functions and utility scripts to create diagrams of SyntaxGraphs.\n\n\n\nudsyntax and the spaCy pipeline for whichever --lang you pass, already installed\nlocal install of graphviz to render a png file\n\nInstall dot:\nMac OS:\nbrew install graphviz\nWindows: download from https://graphviz.org/download/ or\nwinget install --id Graphviz.Graphviz\nVerify it worked: print a version string.\ndot -V\n\n\n\ntext_to_dot.py: analyze and graph a string\npython scripts/text_to_dot.py \"Gallia est omnis divisa in partes tres.\" --lang la | dot -Tpng -o bg_1_1.png\ncorpus_to_dot.py: identify a passage by URN, analyze it, generate its dot representation\npython3 scripts/corpus_to_dot.py scratch/data/compnov.cex --urn \"urn:cts:compnov:bible.genesis.vulgate:1.1\" --lang la | dot -Tpng -o genesis_1_1.png\nParameters:\n\ncorpus (positional, one or more): CEX files (urn|text lines) to search, read and concatenated in the order given via udsyntax.read_cex_many.\n--urn (required): the exact URN of the passage to select (via the new udsyntax.select_urn, an exact match, not the substring urn_filter that read_cex/read_cex_many accept). If more than one line across the given files shares this URN, a warning goes to stderr and the first one is used. If none matches, the script exits with an error naming the URN and the files searched.\n--lang / -l (required): la for Latin (la_core_web_lg) or grc for Ancient Greek (grc_dep_web_lg)."
+    "section": "Utility scripts",
+    "text": "Utility scripts\n\ntext_to_dot.py\ntext_to_dot.py: analyzes a string of text and composes a string with the dot format of the graph. The --lang (or -l) paramater is required.\npython scripts/text_to_dot.py \"Gallia est omnis divisa in partes tres.\" --lang la \nIf you have installed graphviz, then you can pipe the result into dot. -T sets the output type, -o names the output file.\npython scripts/text_to_dot.py \"Gallia est omnis divisa in partes tres.\" --lang la | dot -Tpng -o bg_1_1.png\n\n\ncorpus_to_dot.py\ncorpus_to_dot.py: takes a text file with a corpus in CEX format and a URN, analyzes the text of the cited passage, and generates its dot representation, just like text_to_dot.py. The --urn and --lang (-l) parameters are required .\npython3 scripts/corpus_to_dot.py scratch/data/compnov.cex --urn \"urn:cts:compnov:bible.genesis.vulgate:1.1\" --lang la \nPipe it to dot:\npython3 scripts/corpus_to_dot.py scratch/data/compnov.cex --urn \"urn:cts:compnov:bible.genesis.vulgate:1.1\" --lang la | dot -Tpng -o genesis_1_1.png"
   },
   {
     "objectID": "viz.html#composing-diagrams-from-python",
     "href": "viz.html#composing-diagrams-from-python",
     "title": "Visualizing a graph",
     "section": "Composing diagrams from Python",
-    "text": "Composing diagrams from Python\nudsyntax includes two functions, to_mermaid() and to_dot(), that diagram a SyntaxGraph using the syntax of Mermaid or the open-source graphviz package.\ngraph = SyntaxGraph.from_doc(doc)\n\nprint(graph.to_mermaid())                  # \"graph BT\" ... (root-at-top tree)\nprint(graph.to_mermaid(orientation=\"LR\"))  # left-to-right instead\n\nprint(graph.to_dot())                      # a Graphviz \"digraph { ... }\"\nprint(graph.to_dot(orientation=\"LR\"))      # left-to-right instead"
+    "text": "Composing diagrams from Python\nudsyntax includes two functions, to_mermaid() and to_dot(), that create the Mermaid graph or dot graph of a SyntaxGraph object.\ngraph = SyntaxGraph.from_doc(doc)\n\nmmdgraph = graph.to_mermaid()          #  default BT orientation\nmmdgraph.to_mermaid(orientation=\"LR\")  # left-to-right instead\n\ngviz = graph.to_dot()                   # a Graphviz digraph\ngviz = graph.to_dot(orientation=\"LR\")   # left-to-right instead \nYou could save these results to a file, or in an interactive environment"
   },
   {
     "objectID": "index.html",
@@ -51,7 +58,7 @@
   {
     "objectID": "installation.html",
     "href": "installation.html",
-    "title": "Installing uvsytax",
+    "title": "Installing uvsyntax",
     "section": "",
     "text": "Install the package from its GitHub repository:\npip install git+https://github.com/neelsmith/udsyntax.git\nYou’ll also need a spaCy pipeline for whichever language you’re parsing:\npip install \"la-core-web-lg @ https://huggingface.co/latincy/la_core_web_lg/resolve/main/la_core_web_lg-3.9.6-py3-none-any.whl\"\npip install \"grc-dep-web-lg @ https://huggingface.co/latincy/grc_dep_web_lg/resolve/main/grc_dep_web_lg-3.8.1-py3-none-any.whl\"\nIf you want to export graphs to networkx, install the graph extra:\npip install \"udsyntax[graph] @ git+https://github.com/neelsmith/udsyntax.git\""
   }
