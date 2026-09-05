@@ -1,0 +1,13 @@
+---
+title: Loading a CEX corpus
+---
+
+CEX files are `urn|text` lines, one per citable passage. `read_cex` can filter by a substring of the URN to preselect particular works.
+
+```python
+from udsyntax import read_cex
+
+lines = read_cex("genesis.cex", urn_filter="vulgate")
+urns = [urn for urn, _ in lines]
+texts = [text for _, text in lines]
+```

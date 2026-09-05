@@ -1,0 +1,20 @@
+---
+title: Quarry for docs
+---
+
+
+
+
+### Building a corpus-wide DataFrame
+
+```python
+from udsyntax import load_latin, SyntaxGraph, corpus_to_polars
+
+nlp = load_latin()
+graphs = [SyntaxGraph.from_doc(nlp(text), urn=urn) for urn, text in lines]
+corpus_df = corpus_to_polars(graphs)
+```
+
+When a graph's `urn` is a parseable CTS URN (`urn:cts:namespace:group.work.version:passage`), `corpus_to_polars` adds `group` / `work` / `version` / `passage` columns automatically.
+
+
