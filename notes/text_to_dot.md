@@ -22,7 +22,7 @@ Needs `udsyntax` and the spaCy pipeline for whichever `--lang` you pass already 
 
 ```bash
 pip install -e .
-pip install "la-core-web-lg @ https://huggingface.co/latincy/la_core_web_lg/resolve/main/la_core_web_lg-3.8.0-py3-none-any.whl"
+pip install "la-core-web-lg @ https://huggingface.co/latincy/la_core_web_lg/resolve/main/la_core_web_lg-3.9.6-py3-none-any.whl"
 ```
 
 ## Testing notes

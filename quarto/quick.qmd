@@ -1,0 +1,16 @@
+---
+title: Quick start
+---
+
+After doing a normal spaCy analysis with `nlp`, you can create a `SyntaxGraph` from the result:
+
+```python
+from udsyntax import load_latin, SyntaxGraph
+
+nlp = load_latin()  # loads la_core_web_lg, cached after the first call
+doc = nlp("Gallia est omnis divisa in partes tres.")
+
+graph = SyntaxGraph.from_doc(doc)
+df = graph.to_polars()   # one row per token
+g = graph.to_networkx()  # requires the `graph` extra
+```

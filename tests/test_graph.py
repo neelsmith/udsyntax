@@ -79,12 +79,12 @@ def test_corpus_to_polars_empty_list_returns_empty_frame():
     assert df.is_empty()
 
 
-def test_to_mermaid_default_orientation_is_bt(latin_doc):
+def test_to_mermaid_default_orientation_is_tb(latin_doc):
     graph = SyntaxGraph.from_doc(latin_doc)
     mermaid = graph.to_mermaid()
 
     lines = mermaid.splitlines()
-    assert lines[0] == "graph BT"
+    assert lines[0] == "graph TB"
     assert 'n3["divisa (3:VERB)"]' in mermaid
     assert "n3 -->|nsubj| n0" in mermaid
     assert "n3 -->|cop| n1" in mermaid
@@ -112,13 +112,36 @@ def test_to_mermaid_escapes_special_characters():
 
 
 def test_to_dot_basic_structure(latin_doc):
+    # A single-clause sentence (one finite verb, the ROOT) -- every node
+    # belongs to that one clause, so every node gets the same (first)
+    # palette color.
     graph = SyntaxGraph.from_doc(latin_doc)
     dot = graph.to_dot()
 
     assert dot.startswith('digraph "SyntaxGraph" {')
+    assert "    rankdir=TB;" in dot
+    assert "    node [shape=box];" in dot
     assert dot.rstrip().endswith("}")
-    assert 'n3 [label="divisa (3:VERB)"];' in dot
+
+    blue = 'fillcolor="#82bbff", color="#2a78d6", fontcolor="#000000", style="filled"'
+    assert f'n3 [label="divisa (VERB)", {blue}];' in dot
+    assert f'n0 [label="Gallia (PROPN)", {blue}];' in dot
     assert 'n3 -> n0 [label="nsubj"];' in dot
+
+
+def test_to_dot_accepts_orientation(latin_doc):
+    graph = SyntaxGraph.from_doc(latin_doc)
+    dot = graph.to_dot(orientation="LR")
+    assert "    rankdir=LR;" in dot
+
+
+def test_to_dot_rejects_invalid_orientation(latin_doc):
+    graph = SyntaxGraph.from_doc(latin_doc)
+    with pytest.raises(ValueError):
+        graph.to_dot(orientation="sideways")
+    with pytest.raises(ValueError):
+        # "TD" is a Mermaid-only alias -- not valid DOT rankdir.
+        graph.to_dot(orientation="TD")
 
 
 def test_to_dot_uses_urn_as_graph_name(latin_doc):
@@ -142,3 +165,53 @@ def test_to_dot_escapes_quotes_and_backslashes():
 
     assert "back\\\\slash" in dot
     assert 'quo\\"te' in dot
+
+
+def test_to_dot_color_by_clause_false_leaves_nodes_uncolored(latin_doc):
+    graph = SyntaxGraph.from_doc(latin_doc)
+    dot = graph.to_dot(color_by_clause=False)
+
+    assert "fillcolor" not in dot
+    assert 'n3 [label="divisa (VERB)"];' in dot
+    assert 'n0 [label="Gallia (PROPN)"];' in dot
+
+
+def test_to_dot_colors_by_clause_with_subordination(subordinate_clause_doc):
+    # "Cum venit Caesar vicit." (contrived, not real Latin): "venit" is a
+    # subordinate finite verb (head "vicit", relation advclt), "vicit" is
+    # the root finite verb. "Cum" (a dependent of "venit") should share
+    # its clause's color; "Caesar" and "." (dependents of "vicit") should
+    # share the root clause's color instead -- and the two colors should
+    # differ, ordered by which clause's tokens appear first in the text.
+    graph = SyntaxGraph.from_doc(subordinate_clause_doc)
+    dot = graph.to_dot()
+
+    subordinate = 'fillcolor="#82bbff", color="#2a78d6", fontcolor="#000000", style="filled"'
+    main = 'fillcolor="#ffa682", color="#eb6834", fontcolor="#000000", style="filled"'
+
+    assert f'n0 [label="Cum (SCONJ)", {subordinate}];' in dot
+    assert f'n1 [label="venit (VERB)", {subordinate}];' in dot
+    assert f'n2 [label="Caesar (PROPN)", {main}];' in dot
+    assert f'n3 [label="vicit (VERB)", {main}];' in dot
+    assert f'n4 [label=". (PUNCT)", {main}];' in dot
+
+
+def test_to_dot_warns_when_more_than_eight_clauses():
+    from udsyntax import SyntaxNode
+
+    nodes = [
+        SyntaxNode(
+            id=i,
+            text=f"verb{i}",
+            lemma=f"verb{i}",
+            pos="VERB",
+            relation="ROOT",
+            head_id=i,
+            morph={"VerbForm": "Fin"},
+        )
+        for i in range(9)
+    ]
+    graph = SyntaxGraph(nodes=nodes, edges=[])
+
+    with pytest.warns(UserWarning, match="9 clauses"):
+        graph.to_dot()

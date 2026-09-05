@@ -58,3 +58,21 @@ def read_cex_many(
     for path in paths:
         pairs.extend(read_cex(path, urn_filter=urn_filter, encoding=encoding))
     return pairs
+
+
+def select_urn(pairs, urn: str) -> str:
+    """Return the text paired with an exact URN match.
+
+    ``pairs`` is a list of ``(urn, text)`` tuples such as those returned
+    by :func:`read_cex` / :func:`read_cex_many`. Unlike the ``urn_filter``
+    those readers accept, the match here is exact, not a substring --
+    this is how you pick out one citable passage once you already know
+    its full URN.
+
+    Raises ``KeyError`` if no pair has this exact URN. When more than one
+    pair shares the URN, the first one wins.
+    """
+    for u, text in pairs:
+        if u == urn:
+            return text
+    raise KeyError(f"no line with URN {urn!r}")

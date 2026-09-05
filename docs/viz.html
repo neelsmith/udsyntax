@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>The udsyntax package – udsyntax</title>
+<title>Visualizing a graph – udsyntax</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -93,7 +128,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
 </ul>
@@ -119,8 +154,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#about-udsyntax" id="toc-about-udsyntax" class="nav-link active" data-scroll-target="#about-udsyntax">About <code>udsyntax</code></a></li>
-  <li><a href="#using-udsyntax" id="toc-using-udsyntax" class="nav-link" data-scroll-target="#using-udsyntax">Using <code>udsyntax</code></a></li>
+  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link active" data-scroll-target="#prerequisites">Prerequisites</a></li>
+  <li><a href="#utility-scripts" id="toc-utility-scripts" class="nav-link" data-scroll-target="#utility-scripts">Utility scripts</a>
+  <ul class="collapse">
+  <li><a href="#text_to_dot.py" id="toc-text_to_dot.py" class="nav-link" data-scroll-target="#text_to_dot.py"><code>text_to_dot.py</code></a></li>
+  <li><a href="#corpus_to_dot.py" id="toc-corpus_to_dot.py" class="nav-link" data-scroll-target="#corpus_to_dot.py"><code>corpus_to_dot.py</code></a></li>
+  </ul></li>
+  <li><a href="#composing-diagrams-from-python" id="toc-composing-diagrams-from-python" class="nav-link" data-scroll-target="#composing-diagrams-from-python">Composing diagrams from Python</a></li>
   </ul>
 </nav>
     </div>
@@ -129,7 +169,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">The <code>udsyntax</code> package</h1>
+<h1 class="title">Visualizing a graph</h1>
 </div>
 
 
@@ -146,20 +186,48 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="about-udsyntax" class="level2">
-<h2 class="anchored" data-anchor-id="about-udsyntax">About <code>udsyntax</code></h2>
-<p><a href="https://diyclassics.github.io">Patrick Burns</a> has created invaluable resources for nature-language processing of Latin and Greek texts with the Python <code>spaCy</code> package. The <code>spaCy</code> analyses include syntactic relations (dependencies) that are annotated following the guidelines of the <a href="https://universaldependencies.org">Universal Dependencies</a> framework.</p>
-<p><code>udsyntax</code> extracts syntactic analysis of a Latin or Greek passage into a simple <code>SyntaxNode</code> / <code>SyntaxEdge</code> graph model that can be used with generic Python tools including <code>polars</code> data frames, <code>NetworkX</code> graphs, and visualization tools like <code>graphviz</code>.</p>
-</section>
-<section id="using-udsyntax" class="level2">
-<h2 class="anchored" data-anchor-id="using-udsyntax">Using <code>udsyntax</code></h2>
+<p><code>udsyntax</code> includes Python functions and utility scripts to create diagrams of <code>SyntaxGraph</code>s in the <code>dot</code> syntax used by the freely available <code>graphviz</code> software, and in Mermaid syntax. Mermaid diagrams can be rendered in many Markdown viewers, on mermaid.live, etc. <code>dot</code> graphs require you to install <code>graphviz</code> to generate a PNG or SVG image.</p>
+<section id="prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
 <ul>
-<li><a href="./installation.html">Installation</a></li>
-<li><a href="./quick.html">Quick start</a></li>
-<li><a href="./viz.html">Visualizing a graph</a></li>
-<li><a href="./cexload.html">Loading a CEX corpus</a></li>
-<li><a href="https://neelsmith.github.io/udsyntax/udsyntax.html">API docs</a></li>
+<li><a href="./installation.html">install <code>udsyntax</code></a> and the spaCy pipeline for whichever you want to use</li>
 </ul>
+<p>To use <code>dot</code> files, install <code>graphviz</code>:</p>
+<p>on Mac OS:</p>
+<p><code>brew install graphviz</code></p>
+<p>on Windows: download from https://graphviz.org/download/ or</p>
+<p><code>winget install --id Graphviz.Graphviz</code></p>
+<p>To verify it worked: print a version string.</p>
+<p><code>dot -V</code></p>
+</section>
+<section id="utility-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="utility-scripts">Utility scripts</h2>
+<section id="text_to_dot.py" class="level3">
+<h3 class="anchored" data-anchor-id="text_to_dot.py"><code>text_to_dot.py</code></h3>
+<p><code>text_to_dot.py</code>: analyzes a string of text and composes a string with the <code>dot</code> format of the graph. The <code>--lang</code> (or <code>-l</code>) paramater is required.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/text_to_dot.py <span class="st">"Gallia est omnis divisa in partes tres."</span> <span class="at">--lang</span> la </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If you have installed <code>graphviz</code>, then you can pipe the result into <code>dot</code>. <code>-T</code> sets the output type, <code>-o</code> names the output file.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/text_to_dot.py <span class="st">"Gallia est omnis divisa in partes tres."</span> <span class="at">--lang</span> la <span class="kw">|</span> <span class="ex">dot</span> <span class="at">-Tpng</span> <span class="at">-o</span> bg_1_1.png</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="corpus_to_dot.py" class="level3">
+<h3 class="anchored" data-anchor-id="corpus_to_dot.py"><code>corpus_to_dot.py</code></h3>
+<p><code>corpus_to_dot.py</code>: takes a text file with a corpus in CEX format and a URN, analyzes the text of the cited passage, and generates its dot representation, just like <code>text_to_dot.py</code>. The <code>--urn</code> and <code>--lang</code> (<code>-l</code>) parameters are required .</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> scripts/corpus_to_dot.py scratch/data/compnov.cex <span class="at">--urn</span> <span class="st">"urn:cts:compnov:bible.genesis.vulgate:1.1"</span> <span class="at">--lang</span> la </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Pipe it to <code>dot</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> scripts/corpus_to_dot.py scratch/data/compnov.cex <span class="at">--urn</span> <span class="st">"urn:cts:compnov:bible.genesis.vulgate:1.1"</span> <span class="at">--lang</span> la <span class="kw">|</span> <span class="ex">dot</span> <span class="at">-Tpng</span> <span class="at">-o</span> genesis_1_1.png</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="composing-diagrams-from-python" class="level2">
+<h2 class="anchored" data-anchor-id="composing-diagrams-from-python">Composing diagrams from Python</h2>
+<p><code>udsyntax</code> includes two functions, <code>to_mermaid()</code> and <code>to_dot()</code>, that create the Mermaid graph or <code>dot</code> graph of a <code>SyntaxGraph</code> object.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>graph <span class="op">=</span> SyntaxGraph.from_doc(doc)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>mmdgraph <span class="op">=</span> graph.to_mermaid()          <span class="co">#  default BT orientation</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>mmdgraph.to_mermaid(orientation<span class="op">=</span><span class="st">"LR"</span>)  <span class="co"># left-to-right instead</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>gviz <span class="op">=</span> graph.to_dot()                   <span class="co"># a Graphviz digraph</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>gviz <span class="op">=</span> graph.to_dot(orientation<span class="op">=</span><span class="st">"LR"</span>)   <span class="co"># left-to-right instead </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You could save these results to a file, or in an interactive environment</p>
 
 
 </section>
