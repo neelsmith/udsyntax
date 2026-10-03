@@ -2,6 +2,8 @@
 
 Current version: **0.2.0**
 
+**?**, *?*: Modified utility scripts to display install instructions rather than throw error if spacy model is not install in current environment.
+Added option to turn off coloring in dot graphs.
 
 **0.2.0**, *Sept. 5, 2026*: Additions:
 

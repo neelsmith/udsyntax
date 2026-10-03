@@ -16,6 +16,7 @@ python scripts/corpus_to_dot.py vulgate.cex targum.cex \
 - `--urn` (required): the exact URN of the passage to select (via the new `udsyntax.select_urn`, an exact match, not the substring `urn_filter` that `read_cex`/`read_cex_many` accept). If more than one line across the given files shares this URN, a warning goes to stderr and the first one is used. If none matches, the script exits with an error naming the URN and the files searched.
 - `--lang` / `-l` (required): `la` for Latin (`la_core_web_lg`) or `grc` for Ancient Greek (`grc_dep_web_lg`).
 - `--model` / `-m`: override the default pipeline name for `--lang`.
+- `--color` / `--no-color`: color nodes by clause (default) or draw plain, unfilled boxes. Passed straight through to `SyntaxGraph.to_dot(color_by_clause=...)`.
 
 The digraph is automatically named after `--urn` (via `SyntaxGraph.to_dot`'s existing "name after `self.urn`" behavior). Only the DOT source goes to stdout; everything else (the duplicate-match warning, errors, usage) goes to stderr, so the output is always safe to pipe directly into `dot`.
 
