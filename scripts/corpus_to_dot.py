@@ -9,6 +9,9 @@ Usage:
     python scripts/corpus_to_dot.py vulgate.cex targum.cex \\
         --urn "urn:cts:compnov:bible.genesis.targum_latin.normalized:1.1" --lang la | dot -Tsvg -o graph.svg
 
+    python scripts/corpus_to_dot.py genesis.cex \\
+        --urn "urn:cts:compnov:bible.genesis.vulgate:1.1" --lang la --no-color | dot -Tpng -o plain.png
+
 Reads one or more CEX files (`urn|text` lines; see udsyntax.corpora),
 finds the line whose URN exactly matches --urn, runs its text through
 the chosen spaCy pipeline, and writes only the DOT source to stdout --
@@ -27,7 +30,7 @@ import sys
 from pathlib import Path
 
 try:
-    from udsyntax import SyntaxGraph, load_greek, load_latin, read_cex_many, select_urn
+    from udsyntax import ModelNotInstalledError, SyntaxGraph, load_greek, load_latin, read_cex_many, select_urn
 except ImportError:
     print(
         "udsyntax isn't importable. Install the package first:\n"
@@ -69,6 +72,13 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="Override the default spaCy pipeline name for --lang "
         "(defaults to la_core_web_lg / grc_dep_web_lg).",
     )
+    parser.add_argument(
+        "--color",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Color nodes by clause (the default); --no-color draws plain, "
+        "unfilled boxes.",
+    )
     return parser.parse_args(argv)
 
 
@@ -99,11 +109,15 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit(f"the passage for URN {args.urn!r} is empty")
 
     load = _LOADERS[args.lang]
-    nlp = load(args.model) if args.model else load()
+    try:
+        nlp = load(args.model) if args.model else load()
+    except ModelNotInstalledError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
     doc = nlp(text)
 
     graph = SyntaxGraph.from_doc(doc, urn=args.urn)
-    print(graph.to_dot())
+    print(graph.to_dot(color_by_clause=args.color))
     return 0
 
 

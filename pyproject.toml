@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "udsyntax"
-version = "0.1.0"
+version = "0.3.0"
 description = "Extract simple syntax graphs from spaCy Universal Dependencies parses of Greek and Latin texts"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -16,7 +16,8 @@ dependencies = [
 
 [project.optional-dependencies]
 graph = ["networkx>=3.0"]
-dev = ["pytest>=7.0", "udsyntax[graph]"]
+notebook = ["marimo>=0.25"]
+dev = ["pytest>=7.0", "udsyntax[graph]", "udsyntax[notebook]", "udsyntax[docs]"]
 docs = ["pdoc>=14.0"]
 
 [project.urls]

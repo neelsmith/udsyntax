@@ -4,6 +4,7 @@
 Usage:
     python scripts/text_to_dot.py "Gallia est omnis divisa in partes tres." --lang la | dot -Tpng -o graph.png
     echo "Ἐν ἀρχῇ ἦν ὁ λόγος." | python scripts/text_to_dot.py --lang grc | dot -Tsvg -o graph.svg
+    python scripts/text_to_dot.py "urbs a Romulo condita est." --lang la --no-color | dot -Tpng -o plain.png
 
 TEXT is read from the first positional argument, or from stdin if it's
 omitted (or given as "-"), so the script fits either end of a pipeline.
@@ -21,7 +22,7 @@ import argparse
 import sys
 
 try:
-    from udsyntax import SyntaxGraph, load_greek, load_latin
+    from udsyntax import ModelNotInstalledError, SyntaxGraph, load_greek, load_latin
 except ImportError:
     print(
         "udsyntax isn't importable. Install the package first:\n"
@@ -60,6 +61,13 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         "--urn",
         help="CTS URN to label the digraph with (used as the DOT graph name).",
     )
+    parser.add_argument(
+        "--color",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Color nodes by clause (the default); --no-color draws plain, "
+        "unfilled boxes.",
+    )
     return parser.parse_args(argv)
 
 
@@ -76,11 +84,15 @@ def main(argv: list[str] | None = None) -> int:
     text = read_text(args.text)
 
     load = _LOADERS[args.lang]
-    nlp = load(args.model) if args.model else load()
+    try:
+        nlp = load(args.model) if args.model else load()
+    except ModelNotInstalledError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
     doc = nlp(text)
 
     graph = SyntaxGraph.from_doc(doc, urn=args.urn)
-    print(graph.to_dot())
+    print(graph.to_dot(color_by_clause=args.color))
     return 0
 
 

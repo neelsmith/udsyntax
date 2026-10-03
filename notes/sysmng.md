@@ -15,7 +15,7 @@ The original exploratory notebook lives in `scratch/ud2syntax.py` (gitignored; o
 `scripts/build_docs.py` renders the docstrings in `src/udsyntax/` as a static HTML site with [pdoc](https://pdoc.dev/):
 
 ```bash
-pip install -e ".[docs]"
+pip install -e ".[docs]"           # or ".[dev]", which includes it
 python scripts/build_docs.py        # writes docs/api/index.html
 open docs/api/index.html            # or just open it in a browser
 ```

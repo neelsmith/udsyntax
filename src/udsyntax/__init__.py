@@ -15,6 +15,8 @@ from .models import SyntaxEdge, SyntaxNode, VerbalUnit
 from .nlp import (
     DEFAULT_GREEK_MODEL,
     DEFAULT_LATIN_MODEL,
+    MODEL_INSTALL_SPECS,
+    ModelNotInstalledError,
     load_greek,
     load_latin,
     load_pipeline,
@@ -35,6 +37,8 @@ __all__ = [
     "load_pipeline",
     "DEFAULT_LATIN_MODEL",
     "DEFAULT_GREEK_MODEL",
+    "MODEL_INSTALL_SPECS",
+    "ModelNotInstalledError",
     "CtsUrn",
     "parse_cts_urn",
 ]
