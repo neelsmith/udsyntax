@@ -171,6 +171,21 @@
                     <a class="variable" href="#DEFAULT_GREEK_MODEL">DEFAULT_GREEK_MODEL</a>
             </li>
             <li>
+                    <a class="variable" href="#MODEL_INSTALL_SPECS">MODEL_INSTALL_SPECS</a>
+            </li>
+            <li>
+                    <a class="class" href="#ModelNotInstalledError">ModelNotInstalledError</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#ModelNotInstalledError.__init__">ModelNotInstalledError</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelNotInstalledError.model_name">model_name</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
                     <a class="class" href="#CtsUrn">CtsUrn</a>
                             <ul class="memberlist">
                         <li>
@@ -250,31 +265,35 @@ df = graph.to_polars()
 </span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.nlp</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
 </span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="n">DEFAULT_GREEK_MODEL</span><span class="p">,</span>
 </span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="n">DEFAULT_LATIN_MODEL</span><span class="p">,</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>    <span class="n">load_greek</span><span class="p">,</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>    <span class="n">load_latin</span><span class="p">,</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="n">load_pipeline</span><span class="p">,</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="p">)</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.urn</span><span class="w"> </span><span class="kn">import</span> <span class="n">CtsUrn</span><span class="p">,</span> <span class="n">parse_cts_urn</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>    <span class="s2">"SyntaxGraph"</span><span class="p">,</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>    <span class="s2">"SyntaxNode"</span><span class="p">,</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>    <span class="s2">"SyntaxEdge"</span><span class="p">,</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="s2">"VerbalUnit"</span><span class="p">,</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>    <span class="s2">"corpus_to_polars"</span><span class="p">,</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>    <span class="s2">"read_cex"</span><span class="p">,</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="s2">"read_cex_many"</span><span class="p">,</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>    <span class="s2">"select_urn"</span><span class="p">,</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>    <span class="s2">"load_latin"</span><span class="p">,</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>    <span class="s2">"load_greek"</span><span class="p">,</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="s2">"load_pipeline"</span><span class="p">,</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="s2">"DEFAULT_LATIN_MODEL"</span><span class="p">,</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="s2">"DEFAULT_GREEK_MODEL"</span><span class="p">,</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>    <span class="s2">"CtsUrn"</span><span class="p">,</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="s2">"parse_cts_urn"</span><span class="p">,</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="p">]</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="n">__version__</span> <span class="o">=</span> <span class="s2">"0.1.0"</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>    <span class="n">MODEL_INSTALL_SPECS</span><span class="p">,</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>    <span class="n">ModelNotInstalledError</span><span class="p">,</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="n">load_greek</span><span class="p">,</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>    <span class="n">load_latin</span><span class="p">,</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>    <span class="n">load_pipeline</span><span class="p">,</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="p">)</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.urn</span><span class="w"> </span><span class="kn">import</span> <span class="n">CtsUrn</span><span class="p">,</span> <span class="n">parse_cts_urn</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>    <span class="s2">"SyntaxGraph"</span><span class="p">,</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="s2">"SyntaxNode"</span><span class="p">,</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>    <span class="s2">"SyntaxEdge"</span><span class="p">,</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>    <span class="s2">"VerbalUnit"</span><span class="p">,</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="s2">"corpus_to_polars"</span><span class="p">,</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>    <span class="s2">"read_cex"</span><span class="p">,</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>    <span class="s2">"read_cex_many"</span><span class="p">,</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>    <span class="s2">"select_urn"</span><span class="p">,</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="s2">"load_latin"</span><span class="p">,</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="s2">"load_greek"</span><span class="p">,</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="s2">"load_pipeline"</span><span class="p">,</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>    <span class="s2">"DEFAULT_LATIN_MODEL"</span><span class="p">,</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="s2">"DEFAULT_GREEK_MODEL"</span><span class="p">,</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="s2">"MODEL_INSTALL_SPECS"</span><span class="p">,</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>    <span class="s2">"ModelNotInstalledError"</span><span class="p">,</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>    <span class="s2">"CtsUrn"</span><span class="p">,</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>    <span class="s2">"parse_cts_urn"</span><span class="p">,</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="p">]</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a><span class="n">__version__</span> <span class="o">=</span> <span class="s2">"0.1.0"</span>
 </span></pre></div>
 
 
@@ -1514,9 +1533,9 @@ pair shares the URN, the first one wins.</p>
 
     </div>
     <a class="headerlink" href="#load_latin"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="load_latin-34"><a href="#load_latin-34"><span class="linenos">34</span></a><span class="k">def</span><span class="w"> </span><span class="nf">load_latin</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_LATIN_MODEL</span><span class="p">):</span>
-</span><span id="load_latin-35"><a href="#load_latin-35"><span class="linenos">35</span></a><span class="w">    </span><span class="sd">"""Load (and cache) a Latin dependency-parsing pipeline."""</span>
-</span><span id="load_latin-36"><a href="#load_latin-36"><span class="linenos">36</span></a>    <span class="k">return</span> <span class="n">load_pipeline</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="load_latin-95"><a href="#load_latin-95"><span class="linenos">95</span></a><span class="k">def</span><span class="w"> </span><span class="nf">load_latin</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_LATIN_MODEL</span><span class="p">):</span>
+</span><span id="load_latin-96"><a href="#load_latin-96"><span class="linenos">96</span></a><span class="w">    </span><span class="sd">"""Load (and cache) a Latin dependency-parsing pipeline."""</span>
+</span><span id="load_latin-97"><a href="#load_latin-97"><span class="linenos">97</span></a>    <span class="k">return</span> <span class="n">load_pipeline</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -1536,9 +1555,9 @@ pair shares the URN, the first one wins.</p>
 
     </div>
     <a class="headerlink" href="#load_greek"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="load_greek-39"><a href="#load_greek-39"><span class="linenos">39</span></a><span class="k">def</span><span class="w"> </span><span class="nf">load_greek</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_GREEK_MODEL</span><span class="p">):</span>
-</span><span id="load_greek-40"><a href="#load_greek-40"><span class="linenos">40</span></a><span class="w">    </span><span class="sd">"""Load (and cache) an Ancient Greek dependency-parsing pipeline."""</span>
-</span><span id="load_greek-41"><a href="#load_greek-41"><span class="linenos">41</span></a>    <span class="k">return</span> <span class="n">load_pipeline</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="load_greek-100"><a href="#load_greek-100"><span class="linenos">100</span></a><span class="k">def</span><span class="w"> </span><span class="nf">load_greek</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_GREEK_MODEL</span><span class="p">):</span>
+</span><span id="load_greek-101"><a href="#load_greek-101"><span class="linenos">101</span></a><span class="w">    </span><span class="sd">"""Load (and cache) an Ancient Greek dependency-parsing pipeline."""</span>
+</span><span id="load_greek-102"><a href="#load_greek-102"><span class="linenos">102</span></a>    <span class="k">return</span> <span class="n">load_pipeline</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -1559,14 +1578,27 @@ pair shares the URN, the first one wins.</p>
 
     </div>
     <a class="headerlink" href="#load_pipeline"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="load_pipeline-28"><a href="#load_pipeline-28"><span class="linenos">28</span></a><span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-</span><span id="load_pipeline-29"><a href="#load_pipeline-29"><span class="linenos">29</span></a><span class="k">def</span><span class="w"> </span><span class="nf">load_pipeline</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="load_pipeline-30"><a href="#load_pipeline-30"><span class="linenos">30</span></a><span class="w">    </span><span class="sd">"""Load (and cache) a spaCy pipeline by name."""</span>
-</span><span id="load_pipeline-31"><a href="#load_pipeline-31"><span class="linenos">31</span></a>    <span class="k">return</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="load_pipeline-81"><a href="#load_pipeline-81"><span class="linenos">81</span></a><span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="load_pipeline-82"><a href="#load_pipeline-82"><span class="linenos">82</span></a><span class="k">def</span><span class="w"> </span><span class="nf">load_pipeline</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="load_pipeline-83"><a href="#load_pipeline-83"><span class="linenos">83</span></a><span class="w">    </span><span class="sd">"""Load (and cache) a spaCy pipeline by name or path.</span>
+</span><span id="load_pipeline-84"><a href="#load_pipeline-84"><span class="linenos">84</span></a>
+</span><span id="load_pipeline-85"><a href="#load_pipeline-85"><span class="linenos">85</span></a><span class="sd">    Raises:</span>
+</span><span id="load_pipeline-86"><a href="#load_pipeline-86"><span class="linenos">86</span></a><span class="sd">        ModelNotInstalledError: if ``model_name`` is neither an installed</span>
+</span><span id="load_pipeline-87"><a href="#load_pipeline-87"><span class="linenos">87</span></a><span class="sd">            pipeline package nor an existing path. The message includes</span>
+</span><span id="load_pipeline-88"><a href="#load_pipeline-88"><span class="linenos">88</span></a><span class="sd">            the ``pip install`` command for the default LatinCy pipelines.</span>
+</span><span id="load_pipeline-89"><a href="#load_pipeline-89"><span class="linenos">89</span></a><span class="sd">    """</span>
+</span><span id="load_pipeline-90"><a href="#load_pipeline-90"><span class="linenos">90</span></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_available</span><span class="p">(</span><span class="n">model_name</span><span class="p">):</span>
+</span><span id="load_pipeline-91"><a href="#load_pipeline-91"><span class="linenos">91</span></a>        <span class="k">raise</span> <span class="n">ModelNotInstalledError</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+</span><span id="load_pipeline-92"><a href="#load_pipeline-92"><span class="linenos">92</span></a>    <span class="k">return</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Load (and cache) a spaCy pipeline by name.</p>
+            <div class="docstring"><p>Load (and cache) a spaCy pipeline by name or path.</p>
+
+<p>Raises:
+    ModelNotInstalledError: if <code>model_name</code> is neither an installed
+        pipeline package nor an existing path. The message includes
+        the <code>pip install</code> command for the default LatinCy pipelines.</p>
 </div>
 
 
@@ -1594,6 +1626,87 @@ pair shares the URN, the first one wins.</p>
     
     
 
+                </section>
+                <section id="MODEL_INSTALL_SPECS">
+                    <div class="attr variable">
+            <span class="name">MODEL_INSTALL_SPECS</span>        =
+<input id="MODEL_INSTALL_SPECS-view-value" class="view-value-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+            <label class="view-value-button pdoc-button" for="MODEL_INSTALL_SPECS-view-value"></label><span class="default_value">{&#39;la_core_web_lg&#39;: &#39;la-core-web-lg @ https://huggingface.co/latincy/la_core_web_lg/resolve/main/la_core_web_lg-3.9.6-py3-none-any.whl&#39;, &#39;grc_dep_web_lg&#39;: &#39;grc-dep-web-lg @ https://huggingface.co/latincy/grc_dep_web_lg/resolve/main/grc_dep_web_lg-3.8.1-py3-none-any.whl&#39;}</span>
+
+        
+    </div>
+    <a class="headerlink" href="#MODEL_INSTALL_SPECS"></a>
+    
+    
+
+                </section>
+                <section id="ModelNotInstalledError">
+                            <input id="ModelNotInstalledError-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">ModelNotInstalledError</span><wbr>(<span class="base">builtins.OSError</span>):
+
+                <label class="view-source-button" for="ModelNotInstalledError-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ModelNotInstalledError"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotInstalledError-38"><a href="#ModelNotInstalledError-38"><span class="linenos">38</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotInstalledError</span><span class="p">(</span><span class="ne">OSError</span><span class="p">):</span>
+</span><span id="ModelNotInstalledError-39"><a href="#ModelNotInstalledError-39"><span class="linenos">39</span></a><span class="w">    </span><span class="sd">"""Raised when a spaCy pipeline name is neither an installed package</span>
+</span><span id="ModelNotInstalledError-40"><a href="#ModelNotInstalledError-40"><span class="linenos">40</span></a><span class="sd">    nor a path to a pipeline directory.</span>
+</span><span id="ModelNotInstalledError-41"><a href="#ModelNotInstalledError-41"><span class="linenos">41</span></a>
+</span><span id="ModelNotInstalledError-42"><a href="#ModelNotInstalledError-42"><span class="linenos">42</span></a><span class="sd">    Subclasses :class:`OSError` (what ``spacy.load`` itself raises) so</span>
+</span><span id="ModelNotInstalledError-43"><a href="#ModelNotInstalledError-43"><span class="linenos">43</span></a><span class="sd">    existing ``except OSError`` handlers keep working; the message adds</span>
+</span><span id="ModelNotInstalledError-44"><a href="#ModelNotInstalledError-44"><span class="linenos">44</span></a><span class="sd">    the pip command needed to install the missing pipeline into the</span>
+</span><span id="ModelNotInstalledError-45"><a href="#ModelNotInstalledError-45"><span class="linenos">45</span></a><span class="sd">    Python interpreter that's actually running.</span>
+</span><span id="ModelNotInstalledError-46"><a href="#ModelNotInstalledError-46"><span class="linenos">46</span></a><span class="sd">    """</span>
+</span><span id="ModelNotInstalledError-47"><a href="#ModelNotInstalledError-47"><span class="linenos">47</span></a>
+</span><span id="ModelNotInstalledError-48"><a href="#ModelNotInstalledError-48"><span class="linenos">48</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="ModelNotInstalledError-49"><a href="#ModelNotInstalledError-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">model_name</span>
+</span><span id="ModelNotInstalledError-50"><a href="#ModelNotInstalledError-50"><span class="linenos">50</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">install_hint</span><span class="p">(</span><span class="n">model_name</span><span class="p">))</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Raised when a spaCy pipeline name is neither an installed package
+nor a path to a pipeline directory.</p>
+
+<p>Subclasses <code>OSError</code> (what <code>spacy.load</code> itself raises) so
+existing <code>except OSError</code> handlers keep working; the message adds
+the pip command needed to install the missing pipeline into the
+Python interpreter that's actually running.</p>
+</div>
+
+
+                            <div id="ModelNotInstalledError.__init__" class="classattr">
+                                        <input id="ModelNotInstalledError.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">ModelNotInstalledError</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span></span>)</span>
+
+                <label class="view-source-button" for="ModelNotInstalledError.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ModelNotInstalledError.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotInstalledError.__init__-48"><a href="#ModelNotInstalledError.__init__-48"><span class="linenos">48</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="ModelNotInstalledError.__init__-49"><a href="#ModelNotInstalledError.__init__-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">model_name</span>
+</span><span id="ModelNotInstalledError.__init__-50"><a href="#ModelNotInstalledError.__init__-50"><span class="linenos">50</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">install_hint</span><span class="p">(</span><span class="n">model_name</span><span class="p">))</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                            <div id="ModelNotInstalledError.model_name" class="classattr">
+                                <div class="attr variable">
+            <span class="name">model_name</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelNotInstalledError.model_name"></a>
+    
+    
+
+                            </div>
                 </section>
                 <section id="CtsUrn">
                             <input id="CtsUrn-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
