@@ -2,11 +2,18 @@
 
 Extract simple syntax graphs from spaCy's Universal Dependencies parses of Greek and Latin texts.
 
-> See [release notes](https://github.com/neelsmith/udsyntax/blob/main/releases.md)
+
 
 1. load citable Greek/Latin text corpora from CEX files
 2. analyze them with spaCy pipelines (developed against the LatinCy `la_core_web_lg` and `grc_dep_web_lg` models)
 3. flatten the resulting parse into a small, framework-independent `SyntaxNode` / `SyntaxEdge` graph model that can be exported to a polars `DataFrame` or a `networkx` graph.
+
+## Documentation
+
+
+- See [github pages](https://neelsmith.github.io/udsyntax/udsyntax.html)
+- See [release notes](https://github.com/neelsmith/udsyntax/blob/main/releases.md)
+
 
 ## Installation
 

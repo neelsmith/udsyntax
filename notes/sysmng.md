@@ -16,8 +16,8 @@ The original exploratory notebook lives in `scratch/ud2syntax.py` (gitignored; o
 
 ```bash
 pip install -e ".[docs]"           # or ".[dev]", which includes it
-python scripts/build_docs.py        # writes docs/api/index.html
-open docs/api/index.html            # or just open it in a browser
+python scripts/build_docs.py        # writes docs/udsyntax.html and docs/search.js
+open docs/udsyntax.html             # or just open it in a browser
 ```
 
-`docs/api/` is a local, gitignored build -- nothing is published or committed automatically. Pass a different output directory as an argument if you'd rather build elsewhere: `python scripts/build_docs.py somewhere/else`.
+The API pages go into `docs/` next to the quarto-built site. pdoc always generates its own `index.html` (a redirect to `udsyntax.html`), so the script renders into a temporary directory and copies everything except that `index.html`. `docs/index.html` is left for quarto. Pass a different output directory as an argument if you'd rather build elsewhere: `python scripts/build_docs.py somewhere/else`.
