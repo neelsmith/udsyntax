@@ -19,6 +19,7 @@ marimo comes from the `notebook` optional extra in `pyproject.toml` (`marimo>=0.
 2. **Parse:** calls `load_latin` / `load_greek` and `SyntaxGraph.from_doc`.
 3. **Display controls:** diagram format (Graphviz / Mermaid), orientation (TB/BT/LR/RL, valid for both renderers), and the clause-coloring switch (dot only; same as the scripts' `--color/--no-color`). These live downstream of the parse, so changing them redraws without re-parsing.
 4. **Diagram**, then **downloads** (`udsyntax.dot` or `udsyntax.mmd`, plus `udsyntax.svg` when Graphviz rendered) and the source in a collapsible accordion.
+5. **Tables** (both off by default): separate "Show all nodes" and "Show all edges" checkboxes, each revealing its own `mo.ui.table` in its own cell, so toggling one doesn't redraw the other. Nodes use the `SyntaxNode` field names (`id`, `text`, `lemma`, `pos`, `relation`, `head_id`, `sent_id`) with `morph` flattened to a UD-style `Feat=Val|Feat=Val` string, so every row has the same columns (unlike `SyntaxGraph.to_polars()`, which spreads morph features into separate columns). Edges show `src`/`target` ids plus each end's token text for readability. Toggling the checkbox doesn't re-parse.
 
 ## Graceful failures
 

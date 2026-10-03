@@ -260,5 +260,64 @@ def _(mo, source, source_ext, source_mime, svg):
     return
 
 
+@app.cell(hide_code=True)
+def _(graph, mo):
+    show_nodes = mo.ui.checkbox(value=False, label="Show all nodes")
+    show_edges = mo.ui.checkbox(value=False, label="Show all edges")
+    _ = graph  # only offer the tables once there's a graph
+    mo.hstack([show_nodes, show_edges], justify="start", gap=2)
+    return show_edges, show_nodes
+
+
+@app.cell(hide_code=True)
+def _(graph, mo, show_nodes):
+    mo.stop(not show_nodes.value)
+
+    _node_rows = [
+        {
+            "id": n.id,
+            "text": n.text,
+            "lemma": n.lemma,
+            "pos": n.pos,
+            "relation": n.relation,
+            "head_id": n.head_id,
+            "sent_id": n.sent_id,
+            # UD/CoNLL-U style "Feat=Val|Feat=Val" so every row has the same columns
+            "morph": "|".join(f"{k}={v}" for k, v in n.morph.items()),
+        }
+        for n in graph.nodes
+    ]
+    mo.vstack(
+        [
+            mo.md(f"### Nodes ({len(_node_rows)})"),
+            mo.ui.table(_node_rows, selection=None, pagination=False),
+        ]
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(graph, mo, show_edges):
+    mo.stop(not show_edges.value)
+
+    _text_by_id = {n.id: n.text for n in graph.nodes}
+    _edge_rows = [
+        {
+            "src": e.src,
+            "src_text": _text_by_id.get(e.src, ""),
+            "relation": e.relation,
+            "target": e.target,
+            "target_text": _text_by_id.get(e.target, ""),
+        }
+        for e in graph.edges
+    ]
+    mo.vstack(
+        [
+            mo.md(f"### Edges ({len(_edge_rows)})"),
+            mo.ui.table(_edge_rows, selection=None, pagination=False),
+        ]
+    )
+    return
+
 if __name__ == "__main__":
     app.run()
